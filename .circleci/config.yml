@@ -77,10 +77,12 @@ jobs:
           
 
       # build the application image
-      - run: docker build -t mydockerapp:latest .
+      - run: |
+          docker build -t mydockerapp .
+          docker tag mydockerapp myreactapp:latest
 
       # deploy the image
-      - run: docker push mydockerapp:latest
+      - run: docker push myreactapp:latest
 
             
 
