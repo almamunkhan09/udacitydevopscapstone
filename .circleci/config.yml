@@ -108,13 +108,11 @@ jobs:
       - run:
           name: Roll back to previous deployment if last step fail
           command: |
-            if ( $(curl  http://${loadbalancer}:3000 | grep -o 'React App') == 'React App' ) 
-            then
+            curl  http://${loadbalancer}:3000 | grep -o 'React App' 
+            
             echo "Project Done" 
             echo "The server is running at http://${loadbalancer}:3000 "
-            else 
-            kubectl rollout undo deployment capstoneapp
-            fi
+            
 
 
       
