@@ -49,21 +49,7 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-  
-  scan:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - restore_cache:
-          keys: [backend-build]
-      - run: 
-          name: audit the backend code
-          command: |
-            npm install
-            npm audit fix 
-            npm audit fix --audit-level=critical --force
-            
+ 
   
   buildDocker:
     machine:
@@ -113,8 +99,10 @@ jobs:
             kubectl apply -f ./k8/service.yaml 
             sleep 60s
             export loadbalancer=$(kubectl get svc capstoneapp -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
-            sleep 5m 
-            curl -k -s http://${loadbalancer} | grep -i 'React'
+            sleep 3m 
+            curl  http://${loadbalancer}:3000 | grep -o 'React App'
+            echo "Project Done" 
+            echo "The server is running at http://${loadbalancer}:3000 "
 
 
       

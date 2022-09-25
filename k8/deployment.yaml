@@ -4,12 +4,12 @@ metadata:
   name: capstoneapp
   
 spec:
-  replicas: 2
+  replicas: 3
   strategy: 
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 0
-      maxUnavailable: 20%
+      maxUnavailable: 25%
   selector:
     matchLabels:
       app: capstoneapp
