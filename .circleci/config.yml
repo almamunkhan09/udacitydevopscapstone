@@ -95,7 +95,7 @@ jobs:
       - run:
           name: Install kubectl
           command: |
-            yum install sudo 
+            yum install -y sudo 
             cat kctl.txt >> /etc/yum.repos.d/kubernetes.repo
             sudo yum install -y kubectl
       
