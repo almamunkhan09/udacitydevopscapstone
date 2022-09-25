@@ -100,9 +100,18 @@ jobs:
             sleep 60s
             export loadbalancer=$(kubectl get svc capstoneapp -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
             sleep 3m 
-            curl  http://${loadbalancer}:3000 | grep -o 'React App'
+            curl  http://${loadbalancer}:3000 | grep -o 'React App' 
+
             echo "Project Done" 
             echo "The server is running at http://${loadbalancer}:3000 "
+
+      - run:
+          name: Roll back to previous deployment if last step fail
+          command: |
+            if ( $(curl  http://${loadbalancer}:3000 | grep -o 'React App' )) 
+            echo "Project Done" 
+            echo "The server is running at http://${loadbalancer}:3000 "
+            fi
 
 
       
