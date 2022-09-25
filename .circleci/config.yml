@@ -100,11 +100,22 @@ jobs:
             sudo yum install -y kubectl
       
       - run:
-          name: test aws and kubectl 
+          name: test aws and and config kubectl 
           command: |
             aws s3 ls
             aws eks --region us-east-1 update-kubeconfig --name EKSCluster
             kubectl cluster-info
+      
+      - run:
+          name: Deploy app and service 
+          command: |
+            kubectl apply -f ./k8/deployment.yaml
+            kubectl apply -f ./k8/service.yaml 
+            sleep 60s
+            export loadbalancer=$(kubectl get svc capstoneapp -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
+            sleep 5m 
+            curl -k -s http://${loadbalancer} | grep -i 'React'
+
 
       
     
@@ -116,17 +127,19 @@ jobs:
 workflows:
   capstone:
     jobs:
-      # - build
-      # - test: 
-      #     requires: [build]
-      # - lint: 
-      #     requires: [test]
-      # - scan:
-      #     requires:
-      #       - "lint"
-      # - buildDocker:
-      #     requires:
-      #       - "scan"
-      - deployment
+      - build
+      - test: 
+          requires: [build]
+      - lint: 
+          requires: [test]
+      - scan:
+          requires:
+            - "lint"
+      - buildDocker:
+          requires:
+            - "scan"
+      - deployment:
+          requires:
+            - "buildDocker"
           
       
