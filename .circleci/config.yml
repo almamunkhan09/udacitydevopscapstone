@@ -65,7 +65,7 @@ jobs:
             npm audit fix --audit-level=critical --force
             
   
-  dockerbuild:
+  buildDocker:
     machine:
       image: ubuntu-2204:2022.04.2
     steps:
@@ -76,13 +76,29 @@ jobs:
           echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
           
 
-      # build the application image
+      # build the application image and check dockerlint by hadolint 
       - run: |
+          docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
           docker build -t mydockerapp .
           docker tag mydockerapp khanalmamun/capstone:latest
 
       # deploy the image
       - run: docker push khanalmamun/capstone:latest
+
+  deployment:
+    docker:
+      # Docker image here that supports NodeJS
+      - image: amazon/aws-cli:2.7.18
+    steps:
+      # Checkout code from git
+      - checkout
+      
+
+      - run:
+          name: Install kubectl
+          command: |
+            aws s3 ls
+    
 
             
 
@@ -99,7 +115,10 @@ workflows:
       - scan:
           requires:
             - "lint"
-      - dockerbuild:
+      - buildDocker:
           requires:
             - "scan"
+      - deployment:
+          requires:
+            - "buildDocker"
       
