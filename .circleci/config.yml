@@ -1,0 +1,103 @@
+version: 2.1
+
+orbs:
+  slack: circleci/slack@4.4.4
+
+
+jobs:
+  
+  build:
+    docker:
+      - image: node:16-alpine
+    steps:
+      - checkout
+      
+      - run:
+          name: Building the app 
+          command: |
+            npm install
+            npm run build
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
+  
+  test:
+    docker:
+      - image: node:16-alpine
+    steps:
+      - checkout
+      
+      - run:
+          name: Lint test
+          command: |
+            npm install
+            npm run test
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
+  lint:
+    docker:
+      - image: node:16-alpine
+    steps:
+      - checkout
+      
+      - run:
+          name: Lint test
+          command: |
+            npm install
+            npm run lint
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
+  
+  scan:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend-build]
+      - run: 
+          name: audit the backend code
+          command: |
+            npm install
+            npm audit fix 
+            npm audit fix --audit-level=critical --force
+            
+  
+  dockerbuild:
+    machine:
+      image: ubuntu-2204:2022.04.2
+    steps:
+      - checkout
+      # start proprietary DB using private Docker image
+      # with credentials stored in the UI
+      - run: |
+          echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+          docker run -d --name db company/proprietary-db:1.2.3
+
+      # build the application image
+      - run: docker build -t mydockerapp:latest .
+
+      # deploy the image
+      - run: docker push mydockerapp:latest
+
+            
+
+
+
+workflows:
+  capstone:
+    jobs:
+      - build
+      - test: 
+          requires: [build]
+      - lint: 
+          requires: [test]
+      - scan:
+          requires:
+            - "lint"
+      - scan:
+          requires:
+            - "scan"
+      
