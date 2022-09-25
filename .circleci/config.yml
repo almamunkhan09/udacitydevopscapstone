@@ -120,12 +120,10 @@ workflows:
           requires: [build]
       - lint: 
           requires: [test]
-      - scan:
-          requires:
-            - "lint"
+      
       - buildDocker:
           requires:
-            - "scan"
+            - "test"
       - deployment:
           requires:
             - "buildDocker"
