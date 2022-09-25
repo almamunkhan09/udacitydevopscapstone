@@ -97,7 +97,7 @@ workflows:
       - scan:
           requires:
             - "lint"
-      - scan:
+      - dockerbuild:
           requires:
             - "scan"
       
