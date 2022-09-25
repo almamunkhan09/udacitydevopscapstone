@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capstoneapp
+  
+spec:
+  replicas: 2
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 20%
+  selector:
+    matchLabels:
+      app: capstoneapp
+  template:
+    metadata:
+      labels:
+        app: capstoneapp
+    spec:
+      containers:
+      - name: capstone
+        image: khanalmamun/capstone:latest
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        
