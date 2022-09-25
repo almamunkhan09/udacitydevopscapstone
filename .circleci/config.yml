@@ -103,7 +103,7 @@ jobs:
           name: test aws and kubectl 
           command: |
             aws s3 ls
-            kubectl cluster-info
+            kubectl cluster-info dump
     
 
             
