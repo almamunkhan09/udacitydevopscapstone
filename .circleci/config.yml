@@ -79,7 +79,7 @@ jobs:
       # build the application image
       - run: |
           docker build -t mydockerapp .
-          docker tag mydockerapp capstone:latest
+          docker tag mydockerapp khanalmamun/capstone:latest
 
       # deploy the image
       - run: docker push khanalmamun/capstone:latest
