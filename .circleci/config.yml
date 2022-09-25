@@ -88,7 +88,7 @@ jobs:
   deployment:
     docker:
       # Docker image here that supports NodeJS
-      - image: bitnami/kubectl:1.22.15
+      - image: amazon/aws-cli:2.7.18
     steps:
       # Checkout code from git
       - checkout
@@ -97,10 +97,15 @@ jobs:
       - run:
           name: Install kubectl
           command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            sudo apt install -y unzip
-            unzip awscliv2.zip
-            sudo ./aws/install
+            cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+            [kubernetes]
+            name=Kubernetes
+            baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+            enabled=1
+            gpgcheck=1
+            gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+            EOF
+            sudo yum install -y kubectl
       
       - run:
           name: test aws and kubectl 
@@ -116,18 +121,17 @@ jobs:
 workflows:
   capstone:
     jobs:
-      - build
-      - test: 
-          requires: [build]
-      - lint: 
-          requires: [test]
-      - scan:
-          requires:
-            - "lint"
-      - buildDocker:
-          requires:
-            - "scan"
-      - deployment:
-          requires:
-            - "buildDocker"
+      # - build
+      # - test: 
+      #     requires: [build]
+      # - lint: 
+      #     requires: [test]
+      # - scan:
+      #     requires:
+      #       - "lint"
+      # - buildDocker:
+      #     requires:
+      #       - "scan"
+      - deployment
+          
       
