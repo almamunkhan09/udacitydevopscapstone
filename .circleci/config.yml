@@ -97,10 +97,11 @@ jobs:
       - run:
           name: Roll back to previous deployment if fail
           command: |
-            
+            sleep 1m 
+            kubectl describe pod 
             export URL=$(kubectl get svc capstoneapp -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
             
-            if curl -s "${URL:3000}" | grep "React"
+            if curl -s http://"${URL}":3000 | grep "React"
             then
               echo "All done"
             else
