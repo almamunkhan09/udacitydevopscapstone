@@ -5,6 +5,6 @@ var mamun;
 test('renders learn react link', () => {
   console.log('test');
   render(<App />);
-  const linkElement = screen.getByText(/Hello I am Al Mamun/i);
+  const linkElement = screen.getByText(/Good/i);
   expect(linkElement).toBeInTheDocument();
 });
