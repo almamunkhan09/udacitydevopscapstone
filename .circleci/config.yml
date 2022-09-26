@@ -97,7 +97,7 @@ jobs:
           command: |
             kubectl apply -f ./k8/deployment.yaml
             kubectl apply -f ./k8/service.yaml 
-            kubectl get pod capstone -w
+            kubectl get pod capstoneapp -w
             sleep 3m 
             
 
