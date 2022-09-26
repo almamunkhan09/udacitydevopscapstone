@@ -11,8 +11,8 @@ COPY . .
 ## Step 3:
 # Install packages from requirements.txt
 # hadolint ignore=DL3013
-RUN npm ci  && \
-    npm run build
+RUN npm ci  
+RUN npm run build
 
 
 ## Step 4:

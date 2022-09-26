@@ -17,9 +17,7 @@ jobs:
           command: |
             npm install
             npm run build
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-build
+      
   
   test:
     docker:
@@ -32,9 +30,7 @@ jobs:
           command: |
             npm install
             npm run test
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-build
+      
   lint:
     docker:
       - image: node:16-alpine
@@ -46,10 +42,7 @@ jobs:
           command: |
             npm install
             npm run lint
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-build
- 
+      
   
   buildDocker:
     machine:
