@@ -19,8 +19,8 @@ spec:
         app: capstoneapp
     spec:
       containers:
-      - name: capstone
-        image: khanalmamun/capstone:latest
+      - name: capstoneapp
+        image: khanalmamun/capstone:new
         ports:
         - containerPort: 3000
           protocol: TCP
