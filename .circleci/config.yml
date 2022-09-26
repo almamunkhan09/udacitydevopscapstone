@@ -59,10 +59,10 @@ jobs:
       - run: |
           docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
           docker build -t mydockerapp .
-          docker tag mydockerapp khanalmamun/capstone:latest
+          docker tag mydockerapp khanalmamun/capstone:new
 
       # deploy the image
-      - run: docker push khanalmamun/capstone:latest
+      - run: docker push khanalmamun/capstone:new
 
   deployment:
     docker:
