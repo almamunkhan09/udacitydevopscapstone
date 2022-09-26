@@ -19,8 +19,8 @@ spec:
         app: capstoneapp
     spec:
       containers:
-      - name: ngi
-        image: nginx
+      - name: capstone
+        image: khanalmamun/capstone:latest
         ports:
         - containerPort: 3000
           protocol: TCP

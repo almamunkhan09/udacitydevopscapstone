@@ -86,7 +86,7 @@ jobs:
             sudo yum install -y kubectl
       
       - run:
-          name: test aws and and config kubectl 
+          name: Join to EKS by kubectl  
           command: |
             aws s3 ls
             aws eks --region us-east-1 update-kubeconfig --name EKSCluster
@@ -97,16 +97,12 @@ jobs:
           command: |
             kubectl apply -f ./k8/deployment.yaml
             kubectl apply -f ./k8/service.yaml 
-            sleep 60s
-            export loadbalancer=$(kubectl get svc capstoneapp -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
+            kubectl get pod capstone -w
             sleep 3m 
-            curl  http://${loadbalancer}:3000 | grep -o 'React App' 
-
-            echo "Project Done" 
-            echo "The server is running at http://${loadbalancer}:3000 "
+            
 
       - run:
-          name: Roll back to previous deployment if last step fail
+          name: Roll back to previous deployment if fail
           command: |
             export loadbalancer=$(kubectl get svc capstoneapp -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
             export RESULT=$(curl  http://${loadbalancer}:3000 | grep -o 'React App')
