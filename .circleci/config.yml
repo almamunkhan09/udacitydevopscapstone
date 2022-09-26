@@ -104,6 +104,7 @@ jobs:
             echo "ALL Done"
             else 
             kubectl rollout undo deployments/capstoneapp
+            kubectl get pod -w & kubectl get deployment
             fi
 
             
