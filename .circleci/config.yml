@@ -91,21 +91,22 @@ jobs:
             kubectl apply -f ./k8/deployment.yaml
             kubectl apply -f ./k8/service.yaml 
             kubectl get pod -w & kubectl get deployment
-            sleep 3m 
+            sleep 4m 
             
 
       - run:
           name: Roll back to previous deployment if fail
           command: |
-            export loadbalancer=$(kubectl get svc capstoneapp -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
-            export RESULT=$(curl  http://${loadbalancer}:3000 | grep -o 'React App')
-            if ( RESULT=='React App')
-            then 
-            echo "ALL Done"
-            else 
-            kubectl rollout undo deployments/capstoneapp
-            kubectl get pod -w & kubectl get deployment
+            sleep 1m 
+            export URL=$(kubectl get svc capstoneapp -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
+            
+            if curl -s "${URL:3000}" | grep "React"
+            then
+              return "All done"
+            else
+              return $(kubectl rollout undo deployments/capstoneapp)
             fi
+            
 
             
 

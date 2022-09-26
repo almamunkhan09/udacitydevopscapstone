@@ -19,7 +19,7 @@ spec:
         app: capstoneapp
     spec:
       containers:
-      - name: nginx
+      - name: capstoneapp
         image: nginx
         ports:
         - containerPort: 3000
