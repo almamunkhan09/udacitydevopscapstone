@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './almam.png';
 import './App.css';
-const mamun =2;
+
 
 function App() {
   return (
