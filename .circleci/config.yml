@@ -97,14 +97,14 @@ jobs:
       - run:
           name: Roll back to previous deployment if fail
           command: |
-            sleep 1m 
+            
             export URL=$(kubectl get svc capstoneapp -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
             
             if curl -s "${URL:3000}" | grep "React"
             then
-              return "All done"
+              echo "All done"
             else
-              return $(kubectl rollout undo deployments/capstoneapp)
+              kubectl rollout undo deployments/capstoneapp
             fi
             
 
