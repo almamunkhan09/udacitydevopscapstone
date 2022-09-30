@@ -38,9 +38,14 @@ The awscf.yaml file is the file for creating AWS CloudFormtion stack that will c
 Command for creating AWS EKS cluster
 
 ```bash
-  aws cloudformation create-stack --stack-name <stack name> --template-body file://awscf.yaml --parameters file://parameters.json --region=<AWS region> --capabilities CAPABILITY_NAMED_IAM
+    aws cloudformation create-stack --stack-name <stack name> --template-body file://awscf.yaml --parameters file://parameters.json --region=<AWS region> --capabilities CAPABILITY_NAMED_IAM
 ```
 
+Once the cluster created you can have a list of cluster. Please wait until the cluster is created 
+
+```bash
+    aws eks list-clusters
+```
 
 ## Integrate github into CircleCI
 Build,Test is done automatically once we import config.yml file from github in CircleCI application. The work is just to sing in in CircleCI using github and navigate to config.yml file. Once it is done the a commit to github can set to trigger the pipeline. 
@@ -129,4 +134,14 @@ Sleep 4m is set for waiting so that deployment is done and ready for next jon in
 
 ``` 
 Plesae change the service name here as per the service name given is service.yaml file. This sction will delete failed deployment and roll out to previous succesful deployment.
+
+
+## Screenshots
+
+Please navigate to Screenshots folder in github repo.
+
+
+## Support
+
+For support, email almmaunkhan09@gmail.com or khanalmamunfau@gmail.com
 
