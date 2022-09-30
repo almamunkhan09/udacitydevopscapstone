@@ -1,30 +1,43 @@
-This capstone Project deploy an dockerized app in EKS cluster
-Some defined name(These can easily be soft coded but for simplicity i am using name defined in .config file):
-    cluster name: EKSCluster
-    App Name: capstoneapp(if youchange your app name then you should replace this in config file,deployment.yaml file and service.yaml file)
-    Region: us-east-1
+
+# Deploying a React app to EKS cluster by CircleCI and CloudFormation
+
+This projects aims to implement a CICD pipeline to integrate and deploy and React app in AWS EKS cluster using CircleCI and IAC toll cloudFormation. A fully automated and scalable system is coded so a  a few commands can make your app live in AWS cloud. 
 
 
-Steps:
-    1. EKS cluster with working nodes is created by the awscf.yaml ccloudformation file. The command for creating cluster is 
-    aws cloudformation create-stack --stack-name Capproject --template-body file://awscf.yaml    --parameters file://parameters.json  --region=us-east-1 --capabilities CAPABILITY_NAMED_IAM
 
-    The cluster name is EKSCluster and parameters like cidr block is defined in parameters.json file
 
-    2. Creating The pipeline. Here Circle ci is Used. CircleCi is configured by .config.yaml file.
-     pipelines include Build,Lint Test,Test, buildDocker and deploy state.
+## Authors
+
+- [@Al Mamun Khan](https://www.github.com/almamunkhan09)
+
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your CircleCi Settings. To naviagate to the Environment => Project Setting -> Environment Variables -> Add Variables 
+
+`AWS_ACCESS_KEY_ID`
+`AWS_DEFAULT_REGION`
+`AWS_SECRET_ACCESS_KEY`
+`DOCKER_PASS`
+`DOCKER_USER`
+
+
+
+
+
+## Installation
+
+Inorder to create a cluster you should have installed aws cli in your sytem. You can Install AWS cli you can visit https://aws.amazon.com/cli/ 
+
     
-    3. Rolling Deployment is used in this pipeline. Rolling update is defined in deeployment.yaml file. Maximum unavialble server is defined to 25%
-    4. Dockerfile is linted by hadolint docker image  and deployed in docker repository.
-    5. Once Docker is successfully deployed to repo then the program make connection to cluster. As cluster name is hard coded the command for connection is used 
-          aws eks --region us-east-1 update-kubeconfig --name EKSCluster
-        once connection made the the application is deployed by kubectl command 
+## AWS Cluster Creation
 
-        If you change conatiner name and image or pod number  then the rolling update in console 
+First We need to create EKS cluster in AWS. Cluster can be created automatically in CirclrCI.But it will take time to create the whole stack and exceed the default times for of running a singel task in CircleCi. Moreover for not overlapping with other VPC configurations its should do separately.
+The awscf.yaml file is the file for creating AWS CloudFormtion stack that will create a EKS cluster. Feel to change VPC parameters like CIDR and EKS cluster name, Working node numbers,working Node configurations parameters.  
 
-    6. once deployment happen then itsexposed by load balancer . You can access to app by load balancer at port number 3000
-    7. If Successful deploy happen the it shows All done in last command . Else It will rolling back to last successful deployment.
+Command for creating AWS EKS cluster
 
-    
-
+```bash
+  aws cloudformation create-stack --stack-name <stack name> --template-body file://awscf.yaml --parameters file://parameters.json --region=<AWS region> --capabilities CAPABILITY_NAMED_IAM
+```
 
