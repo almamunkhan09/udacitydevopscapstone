@@ -61,43 +61,17 @@ Parameters:
     Description: IP range for Private Subnet 2
     Type: String
   
+  EKSClusterName:
+     Description: An environment name that will be prefixed to resource names
+     Type: String
+     Default: EKSCluster
+  
   
   
 
  ## Resource Creation 
 
 Resources:
-# IAM role for S3 Access
-  S3Access:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      RoleName: S3Access
-      Description: "IAM role with s3 read only access."
-      Path: /
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ec2.amazonaws.com
-            Action:
-              - 'sts:AssumeRole'
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonS3FullAccess
-
-      Tags:
-        - Key: "Name"
-          Value: "S3Access"
-
-## IAm instance Profile
-  MyInstanceProfile: 
-    Type: "AWS::IAM::InstanceProfile"
-    Properties: 
-      
-      Roles: 
-        - 
-          Ref: "S3Access"
 
 # Creation of VPC
   VPC:
@@ -328,7 +302,7 @@ Resources:
   EKSCluster:
     Type: AWS::EKS::Cluster
     Properties:
-      Name: EKSCluster
+      Name: !Ref EKSClusterName
       RoleArn: !GetAtt 'EKSIAMRole.Arn'
       ResourcesVpcConfig:
         SecurityGroupIds:
@@ -370,7 +344,7 @@ Resources:
     Type: 'AWS::EKS::Nodegroup'
     DependsOn: [EKSIAMRole, PublicSubnet1, PublicSubnet2, PrivateSubnet1, PrivateSubnet2, ControlPlaneSecurityGroup,NodeInstanceProfile,EKSCluster]
     Properties:
-      ClusterName: EKSCluster
+      ClusterName: !Ref EKSClusterName
       NodeRole: !GetAtt 'NodeInstanceRole.Arn'
       ScalingConfig:
         MinSize: 1
